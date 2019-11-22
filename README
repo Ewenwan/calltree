@@ -1,4 +1,6 @@
-     calltree -	static call tree generator for C programs
+# 静态分析C语言生成函数调用关系的利器——calltree
+
+calltree -	static call tree generator for C programs
 
      The calltree command parses  a  collection	 of  input  files
      (assuming	C  syntax) and builds a	graph that represents the
