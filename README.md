@@ -32,3 +32,18 @@ calltree是一个针对C语言代码的静态分析工具。它可以以图像�
 
 上文中还提到一个工具cflow。可能有人要问为什么不使用cflow去分析呢？每个工具都有利弊，calltree是我觉得正好够用且使用方便的一个工具。特别是其可以指定函数名去分析，这个原生的功能非常重要。因为一般在开源项目中，如果对全局或者某个文件进行分析，可能分析出非常杂乱的调用关系图。导致分析出来的结果对代码的解读没有一点帮助。
 
+
+
+# calltree的编译
+
+执行make命令 可能会报错   提示 fexecve 与 getline 函数 与GCC的函数重名
+
+所以需要修改这些函数名
+
+```sh
+# 查找所有.c/.h文件 将其中的fexecve 修改为 fexecve_calltree    ；  getline 修改为 getline_calltree
+find . -name "*.[c|h]" |xargs sed -i -e "s/fexecve/fexecve_calltree/"
+find . -name "*.[c|h]" |xargs sed -i -e "s/getline//"
+
+```
+
