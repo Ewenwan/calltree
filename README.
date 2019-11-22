@@ -19,3 +19,8 @@ calltree -	static call tree generator for C programs
      Calltree is able to detect	recursive  function  calls  (e.g.
      functions	that  call themselves).	 Recursive function calls
      are marked	with an	ellipsis in the	output.
+
+ 对于C语言的项目，一些文件动辄几千行代码，上百个函数体，理解起来颇有些费劲。
+ 这个时候我们可以使用calltree工具对代码进行静态分析，
+ 然后产生调用关系树，使得我们可以对代码的构成有个初步的认识。
+ 这样可以让我们站在高处，俯览全局，制定出一个着实可行的阅读理解方案。
