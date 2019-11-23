@@ -1,4 +1,3 @@
-
 # 静态分析C语言生成函数调用关系的利器——calltree
 
 [静态分析C语言生成函数调用关系的利器——cflow](https://blog.csdn.net/breaksoftware/article/details/75576878)
@@ -46,4 +45,45 @@ find . -name "*.[c|h]" |xargs sed -i -e "s/fexecve/fexecve_calltree/"
 find . -name "*.[c|h]" |xargs sed -i -e "s/getline//"
 
 ```
+
+# calltree的使用
+
+calltree --help指令我们可以看到其参数说明
+
+        -g输出函数所在文件的目录
+        -m参数只用于分析main函数中的函数调用关系。
+        -p参数是默认的。它表示要使用C语言预处理程序分析代码。缺点是它会产生很多我们不关心的消息。
+        -np和-p是相反的。它表示不要使用C语言预处理程序分析代码。如果指定它，可能会导致分析过程出错。因为像开源项目，有几个不需要预处理处理下呢？
+        -xvcg参数表示导出一个可以使用VCG软件处理的格式的文件。
+        -dot参数表示导出一个dot格式文件，可以供graphviz处理的。
+
+## 文本输出
+
+文本输出只是为了展示calltree的能力。我们libev库的ev_run方法为例，切到代码目录后调用
+        
+calltree -bg list="ev_run" *.c 
+
+
+## 图形化输出
+
+图像化输出我们只看dot格式。
+
+首先我们使用下面命令把结果保存到我们指定的文件中
+
+    calltree -dot list="ev_run" *.c > ev_run.dot
+
+然后调用graphviz（没有安装的可以使用apt-get install graphviz先安装）
+
+    dot -Tgif ev_run.dot -o ev_run.gif
+
+然后我们将图片打开查看，就发现图形化输出更加便于理解。
+
+# 总结
+
+calltree+graphviz是分析C源码很好的组合。有人提出使用cflow替代calltree，一是因为calltree不再维护，而cflow“一直在更新”。
+然后我发现，calltree的最后一个版本是2004年的；cflow最后一个版本是2011年的。就目前而言，
+它们两的更新都停滞了，所以我认为“更新进度”不能成为排除calltree而选择cflow的原因。而且相对于cflow，calltree的使用非常方便，
+并且它具有一个cflow不具备的优点：calltree可以直接生成dot文件，然后借助graphviz将其转换成图片。
+而cflow只能输出ASCII的调用关系图，不借助中间工具不能转成dot。
+
 
