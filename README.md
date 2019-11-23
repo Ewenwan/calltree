@@ -22,6 +22,24 @@ calltree -	static call tree generator for C programs
      functions	that  call themselves).	 Recursive function calls
      are marked	with an	ellipsis in the	output.
 
+calltree是在linux下面看c代码（尤其是复杂的内核代码）的神器。
+
+推荐  calltree+vim + ctags + cscope + taglist 【 vim: 搭建vim看代码的环境   http://www.cnblogs.com/mylinux/p/5013588.html】
+
+或者 calltree + source insight
+
+source insight能方便地查看向上和向下的函数（变量等）调用关系，并且支持多种语言，几乎是无可替代的。但调用深度太大的时候，人就记不住了，这个时候
+calltree可以生成一个全局的调用图，便于很快掌握代码框架。
+
+如想看内核代码start_kernel干了些什么：
+
+#calltree -np -b  list=start_kernel    depth=3 `find ./init/ ./kernel/ -name "*.c"` > maps
+
+#vi maps
+
+
+
+
  对于C语言的项目，一些文件动辄几千行代码，上百个函数体，理解起来颇有些费劲。
  这个时候我们可以使用calltree工具对代码进行静态分析，
  然后产生调用关系树，使得我们可以对代码的构成有个初步的认识。
@@ -56,7 +74,17 @@ calltree --help指令我们可以看到其参数说明
         -np和-p是相反的。它表示不要使用C语言预处理程序分析代码。如果指定它，可能会导致分析过程出错。因为像开源项目，有几个不需要预处理处理下呢？
         -xvcg参数表示导出一个可以使用VCG软件处理的格式的文件。
         -dot参数表示导出一个dot格式文件，可以供graphviz处理的。
+        
+        -b 就是那个竖线了，很直观地显示缩进层次。
+        -g 打印内部函数的所属文件名及行号，外部函数所属文件名和行号也是可打印的，详man
+        -np 不要调用c预处理器，这样打印出的界面不会很杂乱，但也可能会产生错误哦，如果我们只看函数的调用关系的话，不会有大问题。
+        -m 告诉程序从main开始
+        还有一个重要的选项是listfunction ，缩写是lf，用来只打印某个函数中的调用，用法是： lf=your_function
+        depth=#选项： 例如： calltree -gb -np -m bind9/bin/named/*.[c.h] depth=2 > codecalltree.txt
 
+注意：
+　　调用关系一般比较复杂，最好设置好（1）想要关心的函数（2）调用深度（3）关心的目录，否则又会引入过多无关选项，干扰视线。
+  
 ## 文本输出
 
 文本输出只是为了展示calltree的能力。我们libev库的ev_run方法为例，切到代码目录后调用
